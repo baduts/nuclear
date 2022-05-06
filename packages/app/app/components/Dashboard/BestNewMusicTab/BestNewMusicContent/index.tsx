@@ -1,16 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
-import { bestNewItemShape } from '../BestNewMusicMenu/BestNewMusicCard';
-
 import styles from './styles.scss';
+import { History } from 'history';
+import { PitchforkAlbum } from '../../../../actions/dashboard';
+import { useDispatch } from 'react-redux';
+import { albumInfoSearchByName, artistInfoSearchByName } from '../../../../actions/search';
 
-const BestNewMusicContent = ({
+type BestNewMusicContentProps = {
+  history: History
+  item: PitchforkAlbum | null
+}
+
+const BestNewMusicContent: React.FC<BestNewMusicContentProps> = ({
   item,
-  albumInfoSearchByName,
-  artistInfoSearchByName,
   history
 }) => {
+  const dispatch = useDispatch();
+
   if (item === null) {
     return null;
   }
@@ -24,13 +29,13 @@ const BestNewMusicContent = ({
         <div className={styles.review_headings}>
           <div
             className={styles.artist}
-            onClick={() => artistInfoSearchByName(item.artist, history)}
+            onClick={() => dispatch(artistInfoSearchByName(item.artist, history))}
           >
             {item.artist}
           </div>
           <div
             className={styles.title}
-            onClick={() => albumInfoSearchByName(item.title + ' ' + item.artist, history)}
+            onClick={() => dispatch(albumInfoSearchByName(item.title + ' ' + item.artist, history))}
           >
             {item.title}
           </div>
@@ -55,20 +60,6 @@ const BestNewMusicContent = ({
       }
     </div>
   );
-};
-
-BestNewMusicContent.propTypes = {
-  item: bestNewItemShape,
-  artistInfoSearchByName: PropTypes.func,
-  albumInfoSearchByName: PropTypes.func,
-  history: PropTypes.object
-};
-
-BestNewMusicContent.defaultProps = {
-  item: null,
-  artistInfoSearchByName: () => { },
-  albumInfoSearchByName: () => { },
-  history: {}
 };
 
 export default BestNewMusicContent;
